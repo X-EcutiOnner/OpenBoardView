@@ -112,10 +112,10 @@ jobs:
         with:
           sdl2: 2.32.0
       - name: MacOS build
-        run: TERM=xterm bash ./build.sh --recompile
+        run: TERM=xterm SIGNER=- bash ./build.sh --recompile
       - uses: actions/upload-artifact@v4
         with:
-          name: "openboardview_unsigned_macos15_universal_dmg.${{ github.sha }}"
+          name: "openboardview_adhoc_signed_macos15_universal_dmg.${{ github.sha }}"
           path: '*.dmg'
   build-64bit-exe-on-windows:
     runs-on: windows-2025
