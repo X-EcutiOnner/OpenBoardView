@@ -9,7 +9,6 @@
 #include <list>
 #include <sstream>
 #include <string>
-#include <string_view>
 #include <unordered_map>
 #include <vector>
 
@@ -147,7 +146,7 @@ XZZPCBFile::XZZPCBFile(std::vector<char> &buf, uint64_t xzzkey) {
 		return;
 	}
 
-	std::string_view v6v6555v6v6{"v6v6555v6v6"};
+	std::string v6v6555v6v6{"v6v6555v6v6"};
 	auto v6v6555v6v6_found = std::search(buf.begin(), buf.end(), v6v6555v6v6.begin(), v6v6555v6v6.end());
 
 	// v6v6555v6v6_found is buf.end() if not found
