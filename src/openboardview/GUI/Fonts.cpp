@@ -14,6 +14,8 @@
 #include "DPI.h"
 #include "utils.h"
 
+constexpr const float Fonts::MAX_FONT_SIZE;
+
 std::string Fonts::load(std::string customFont) {
 	// Font selection
 	std::deque<std::string> fontList(
