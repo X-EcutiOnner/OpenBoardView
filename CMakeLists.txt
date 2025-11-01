@@ -90,6 +90,17 @@ if(NOT MSVC)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wextra")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra -Werror=format-security")
 endif()
+# Workaround type bug of kSecKeyUsageCritical in SecCertificate.h for Xcode 8.2.1 SDK 10.12
+if(APPLE)
+	execute_process(
+		COMMAND xcrun --show-sdk-version
+		OUTPUT_VARIABLE OSX_SDK_VERSION
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+	)
+	if(OSX_SDK_VERSION VERSION_EQUAL 10.12)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-c++11-narrowing")
+	endif()
+endif()
 set(CMAKE_CXX_STANDARD 11)
 
 # Inject variables into version.h
