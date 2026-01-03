@@ -34,9 +34,8 @@ BVR3File::BVR3File(std::vector<char> &buf) {
 	char *arena_end = file_buf + file_buf_size - 1;
 	*arena_end      = 0;
 
-	BRDPart blank_part;
 	BRDPin blank_pin;
-	BRDPart part;
+	BVR3Part part;
 	BRDPin pin;
 	std::list<std::pair<BRDPoint, BRDPoint>> outline_segments;
 
@@ -63,7 +62,11 @@ BVR3File::BVR3File(std::vector<char> &buf) {
 			else if (!strcmp(side, "O"))
 				part.mounting_side = BRDPartMountingSide::Both;
 		} else if (!strncmp(line, "PART_ORIGIN ", 12)) {
-			// Value ignored, used as reference point for relative pin placements, not currently supported
+			p += 12;
+			double origin_x = READ_DOUBLE();
+			part.pos.x = trunc(origin_x);
+			double origin_y = READ_DOUBLE();
+			part.pos.y = trunc(origin_y);
 		} else if (!strncmp(line, "PART_MOUNT ", 11)) {
 			p += 11;
 			char *mount = READ_STR();
@@ -93,9 +96,9 @@ BVR3File::BVR3File(std::vector<char> &buf) {
 		} else if (!strncmp(line, "PIN_ORIGIN ", 11)) {
 			p += 11;
 			double origin_x = READ_DOUBLE();
-			pin.pos.x = trunc(origin_x);
+			pin.pos.x = trunc(origin_x) + part.pos.x;
 			double origin_y = READ_DOUBLE();
-			pin.pos.y = trunc(origin_y);
+			pin.pos.y = trunc(origin_y) + part.pos.y;
 		} else if (!strncmp(line, "PIN_RADIUS ", 11)) {
 			p += 11;
 			pin.radius = READ_DOUBLE();
@@ -115,7 +118,7 @@ BVR3File::BVR3File(std::vector<char> &buf) {
 		} else if (!strcmp(line, "PART_END")) {
 			part.end_of_pins = pins.size();
 			parts.push_back(part);
-			part = blank_part;
+			part = {};
 		} else if (!strncmp(line, "OUTLINE_POINTS ", 15)) {
 			p += 15;
 			while (p[0]) {
