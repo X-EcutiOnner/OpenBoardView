@@ -86,19 +86,22 @@ jobs:
           name: "openboardview-32bit.exe.${{ github.sha }}"
           path: bin/openboardview.exe
   build-and-package_intel-DMG:
-    runs-on: macos-13 # intel runner
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0
       - name: MacOS dependencies
-        run: brew update && brew install sdl2
+        run: |
+          brew tap-new local/oldermacos
+          ln -s $(pwd)/utilities/brew_oldermacos/sdl2.rb "$(brew --repository local/oldermacos)/Formula/sdl2.rb"
+          brew install local/oldermacos/sdl2
       - name: MacOS build
         run: TERM=xterm bash ./build.sh --recompile
       - uses: actions/upload-artifact@v4
         with:
-          name: "openboardview_unsigned_macos13_intel_dmg.${{ github.sha }}"
+          name: "openboardview_unsigned_macos_intel_dmg.${{ github.sha }}"
           path: '*.dmg'
   build-and-package_universal-DMG:
     runs-on: macos-15
