@@ -359,9 +359,9 @@ void FZFile::parse(std::vector<char> &buf, const std::array<uint32_t, 44> &fzkey
 				/*char *srotate =*/READ_STR();
 				part.part_type = BRDPartType::SMD;
 				if (!strcmp(smirror, "YES"))
-					part.mounting_side = BRDPartMountingSide::Top; // SMD part on top
-				else
 					part.mounting_side = BRDPartMountingSide::Bottom; // SMD part on bottom
+				else
+					part.mounting_side = BRDPartMountingSide::Top; // SMD part on top
 				part.end_of_pins       = 0;
 				parts.push_back(part);
 				parts_id[part.name] = parts.size();
